@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - QuietPlace</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:system-ui;
+        }
+
+        body{
+            background:#f0f2f5;
+        }
+
+        /* NAVBAR (UNIFIED STYLE) */
+        .navbar{
+            background:linear-gradient(135deg,#1a1a2e,#16213e);
+            padding:1rem 5%;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        .logo{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            color:white;
+            font-weight:bold;
+        }
+
+        .logo i{
+            color:#e94560;
+            font-size:26px;
+        }
+
+        .nav-links{
+            display:flex;
+            gap:20px;
+        }
+
+        .nav-links a{
+            color:#ccc;
+            text-decoration:none;
+            transition:0.3s;
+            font-weight:500;
+        }
+
+        .nav-links a:hover{
+            color:#e94560;
+        }
+
+        .nav-links a.active{
+            color:#e94560;
+            border-bottom:2px solid #e94560;
+            padding-bottom:3px;
+        }
+
+        /* PROFILE */
+        .profile-container{
+            max-width:700px;
+            margin:30px auto;
+        }
+
+        .profile-card{
+            background:white;
+            border-radius:10px;
+            overflow:hidden;
+            box-shadow:0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        .profile-header{
+            background:#1a1a2e;
+            color:white;
+            text-align:center;
+            padding:25px;
+        }
+
+        .profile-avatar{
+            font-size:45px;
+            margin-bottom:10px;
+            color:#e94560;
+        }
+
+        .info{
+            padding:20px;
+        }
+
+        .info-row{
+            display:flex;
+            justify-content:space-between;
+            padding:12px 0;
+            border-bottom:1px solid #eee;
+        }
+
+        .actions{
+            display:flex;
+            gap:10px;
+            padding:20px;
+        }
+
+        .logout-btn{
+            background:#2ecc71;
+            color:white;
+            padding:8px 16px;
+            border-radius:6px;
+            text-decoration:none;
+            border:none;
+            cursor:pointer;
+        }
+
+        .logout-btn:hover{
+            background:#27ae60;
+        }
+
+        .delete-btn{
+            background:#e74c3c;
+        }
+
+        .delete-btn:hover{
+            background:#c0392b;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="logo">
+        <i class="fas fa-headphones"></i>
+        <span>QuietPlace</span>
+    </div>
+
+    <div class="nav-links">
+        <a href="/home">Home</a>
+        <a href="/explore">Explore</a>
+        <a href="/favorites">Favorites</a>
+        <a href="/profile" class="active">Profile</a>
+    </div>
+</nav>
+
+<!-- PROFILE -->
+<div class="profile-container">
+
+    <div class="profile-card">
+
+        <!-- HEADER -->
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+
+            <h2 th:text="${user.username}">Username</h2>
+            <p th:text="${user.email}">email@example.com</p>
+        </div>
+
+        <!-- INFO -->
+        <div class="info">
+
+            <div class="info-row">
+                <span>Username</span>
+                <span th:text="${user.username}">-</span>
+            </div>
+
+            <div class="info-row">
+                <span>Email</span>
+                <span th:text="${user.email}">-</span>
+            </div>
+
+
+            <div class="info-row">
+                <span>Member Since</span>
+                <span th:text="${user.createdAt}">-</span>
+            </div>
+
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="actions">
+
+            <a href="/logout" class="logout-btn">Logout</a>
+
+            <form action="/delete-account" method="post"
+                  onsubmit="return confirm('Are you sure?')">
+                <button type="submit" class="logout-btn delete-btn">
+                    Delete Account
+                </button>
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuietPlace - Smart Quiet Spots</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui;}
+
+        body{background:#f8f9fb;color:#333;}
+
+        /* NAV */
+        .navbar{
+            background:linear-gradient(135deg,#1a1a2e,#16213e);
+            padding:1rem 5%;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            position:sticky;
+            top:0;
+            z-index:100;
+        }
+
+        .logo{color:white;font-weight:bold;display:flex;gap:10px;align-items:center;}
+        .logo i{color:#e94560;}
+
+        .navbar a{color:#ccc;margin:0 10px;text-decoration:none;}
+        .navbar a:hover{color:#e94560;}
+
+        .auth a{
+            padding:8px 15px;border-radius:20px;text-decoration:none;margin-left:10px;
+        }
+
+        .login{border:1px solid #e94560;color:#e94560;}
+        .signup{background:#e94560;color:white;}
+
+        /* HERO */
+        .hero{
+            background:linear-gradient(135deg,#1a1a2e,#16213e);
+            color:white;
+            text-align:center;
+            padding:6rem 10%;
+        }
+
+        .hero h1{font-size:3rem;}
+        .hero span{color:#e94560;}
+        .hero p{opacity:0.8;margin-top:10px;}
+
+        .btns{margin-top:25px;}
+        .btn{
+            padding:12px 25px;border-radius:25px;text-decoration:none;margin:5px;display:inline-block;
+        }
+        .primary{background:#e94560;color:white;}
+        .secondary{border:1px solid white;color:white;}
+
+        /* SECTION */
+        .section{padding:5rem 10%;}
+        .title{text-align:center;font-size:2rem;margin-bottom:40px;}
+
+        /* GRID */
+        .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;}
+
+        .card{
+            background:white;
+            padding:25px;
+            border-radius:15px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.08);
+            transition:0.3s;
+        }
+
+        .card:hover{transform:translateY(-6px);}
+
+        .card i{color:#e94560;font-size:2rem;margin-bottom:10px;}
+
+        /* ABOUT STORY */
+        .story{
+            max-width:800px;
+            margin:auto;
+            text-align:center;
+            color:#555;
+            line-height:1.8;
+        }
+
+        /* MAP FAKE */
+        .map{
+            background:#111a2e;
+            color:white;
+            padding:60px;
+            border-radius:15px;
+            text-align:center;
+        }
+
+        /* TESTIMONIALS */
+        .testimonial{
+            font-style:italic;
+            color:#555;
+        }
+
+        /* FAQ */
+        .faq-item{
+            background:white;
+            padding:15px;
+            margin-bottom:10px;
+            border-radius:10px;
+            cursor:pointer;
+        }
+
+        .answer{display:none;margin-top:10px;color:#777;}
+
+        /* CTA */
+        .cta{
+            background:#e94560;
+            color:white;
+            text-align:center;
+            padding:4rem 10%;
+            margin:60px 10%;
+            border-radius:20px;
+        }
+
+        .cta a{
+            background:white;
+            color:#e94560;
+            padding:12px 25px;
+            border-radius:25px;
+            text-decoration:none;
+        }
+
+        /* FOOTER */
+        footer{
+            background:#0f172a;
+            color:#bbb;
+            text-align:center;
+            padding:3rem;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<div class="navbar">
+    <div class="logo"><i class="fas fa-moon"></i> QuietPlace</div>
+
+    <div>
+        <a href="#features">Features</a>
+        <a href="#about">About</a>
+        <a href="#map">Map</a>
+        <a href="#faq">FAQ</a>
+    </div>
+
+    <div class="auth">
+        <a class="login" href="http://localhost:8081/login">Login</a>
+        <a class="signup" href="http://localhost:8081/register">Sign Up</a>
+    </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+    <h1>Find Your <span>Perfect Quiet Spot</span></h1>
+    <p>Smart AI helps you discover peaceful places for studying, working, and focusing.</p>
+
+    <div class="btns">
+        <a class="btn secondary" href="http://localhost:8081/register">Join</a>    </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+    <h2 class="title">Smart Features</h2>
+
+    <div class="grid">
+
+        <div class="card"><i class="fas fa-map"></i><h3>Location Tracking</h3><p>Find quiet places near you instantly.</p></div>
+        <div class="card"><i class="fas fa-brain"></i><h3>AI Matching</h3><p>Matches places to your focus style.</p></div>
+        <div class="card"><i class="fas fa-volume-mute"></i><h3>Noise Detection</h3><p>Estimates how quiet a place is.</p></div>
+        <div class="card"><i class="fas fa-star"></i><h3>User Reviews</h3><p>Real feedback from real users.</p></div>
+
+    </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+    <h2 class="title">About QuietPlace</h2>
+
+    <p class="story">
+        QuietPlace is built to solve a real problem: finding a calm environment in a noisy world.
+        We combine AI, location data, and user feedback to help people improve focus and productivity.
+        Whether you're studying for exams or working remotely, we help you find your perfect space.
+    </p>
+</section>
+
+<!-- MAP IDEA -->
+<section class="section" id="map">
+    <h2 class="title">Live Map Concept</h2>
+
+    <div class="map">
+        <i class="fas fa-map-marked-alt" style="font-size:3rem;color:#e94560;"></i>
+        <h3 style="margin-top:10px;">Interactive Quiet Zones</h3>
+        <p>Imagine a map showing green (quiet), yellow (medium), red (noisy) places in real-time.</p>
+    </div>
+</section>
+
+<!-- WHY IT MATTERS -->
+<section class="section">
+    <h2 class="title">Why This Matters</h2>
+
+    <div class="grid">
+        <div class="card"><i class="fas fa-graduation-cap"></i><h3>Students</h3><p>Better focus = better grades.</p></div>
+        <div class="card"><i class="fas fa-briefcase"></i><h3>Freelancers</h3><p>Productivity without distractions.</p></div>
+        <div class="card"><i class="fas fa-brain"></i><h3>Mental Health</h3><p>Quiet spaces reduce stress.</p></div>
+    </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section">
+    <h2 class="title">What Users Say</h2>
+
+    <div class="grid">
+
+        <div class="card testimonial">
+            “Finally I can study without noise. This app is a lifesaver!”
+            <br>— Sara
+        </div>
+
+        <div class="card testimonial">
+            “I found amazing cafes I never knew existed.”
+            <br>— Ahmed
+        </div>
+
+        <div class="card testimonial">
+            “Perfect for remote work focus.”
+            <br>— Lina
+        </div>
+
+    </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+    <h2 class="title">FAQ</h2>
+
+    <div class="faq-item">What is QuietPlace?
+        <div class="answer">A smart platform to find quiet environments.</div>
+    </div>
+
+    <div class="faq-item">Is it free?
+        <div class="answer">Yes, basic version is free.</div>
+    </div>
+
+    <div class="faq-item">How does AI work?
+        <div class="answer">It analyzes location, noise, and user behavior.</div>
+    </div>
+
+</section>
+
+<footer class="footer">
+
+    <div class="footer-container">
+
+        <!-- ABOUT -->
+        <div class="footer-box">
+            <h3><i class="fas fa-headphones"></i> QuietPlace</h3>
+            <p>Find your calm space anywhere, anytime. We help you discover peaceful places based on noise level.</p>
+        </div>
+
+        <!-- LINKS -->
+        <div class="footer-box">
+            <h4>Quick Links</h4>
+            <a href="#features">Features</a>
+            <a href="#about">About Us</a>
+            <a href="#why">Why QuietPlace</a>
+            <a href="#map">Live Map Concept</a>
+            <a href="#faq">FAQ</a>
+        </div>
+        <!-- CONTACT -->
+        <div class="footer-box">
+            <h4>Contact</h4>
+            <p><i class="fas fa-envelope"></i> support@quietplace.com</p>
+            <p><i class="fas fa-phone"></i> +20 100 000 0000</p>
+        </div>
+
+        <!-- SOCIAL -->
+        <div class="footer-box">
+            <h4>Follow Us</h4>
+            <div class="social">
+                <i class="fab fa-facebook"></i>
+                <i class="fab fa-instagram"></i>
+                <i class="fab fa-twitter"></i>
+                <i class="fab fa-linkedin"></i>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        © 2026 QuietPlace | Made with ❤️
+    </div>
+
+</footer>
+<script>
+    // FAQ toggle
+    document.querySelectorAll(".faq-item").forEach(el=>{
+        el.onclick=()=>{
+            let a=el.querySelector(".answer");
+            a.style.display=a.style.display==="block"?"none":"block";
+        }
+    });
+</script>
+
+</body>
+</html>

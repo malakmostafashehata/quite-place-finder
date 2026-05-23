@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${place.name} + ' - QuietPlace'">Place Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; }
+        .navbar { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo i { font-size: 28px; color: #e94560; }
+        .logo h1 { font-size: 1.5rem; color: white; }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { text-decoration: none; color: #ccc; font-weight: 500; }
+        .nav-links a:hover { color: #e94560; }
+        .container { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+        .place-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        .place-header { background: linear-gradient(135deg, #1a1a2e 0%, #e94560 100%); color: white; padding: 2rem; text-align: center; position: relative; }
+        .place-header i { font-size: 3rem; margin-bottom: 1rem; }
+        .place-header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .place-header .address { font-size: 1rem; opacity: 0.9; }
+        .favorite-btn { position: absolute; top: 20px; right: 20px; background: white; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; font-size: 1.2rem; transition: all 0.3s; }
+        .favorite-btn:hover { transform: scale(1.1); }
+        .favorite-btn i { margin: 0; font-size: 1.2rem; }
+        .favorite-active { color: #e94560; }
+        .favorite-inactive { color: #ccc; }
+        .place-body { padding: 2rem; }
+        .info-section { margin-bottom: 2rem; }
+        .info-section h3 { color: #1a1a2e; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; }
+        .info-section h3 i { color: #e94560; }
+        .noise-badge { display: inline-block; padding: 8px 16px; border-radius: 30px; font-weight: bold; }
+        .noise-quiet { background: #d4edda; color: #155724; }
+        .noise-moderate { background: #fff3cd; color: #856404; }
+        .noise-active { background: #f8d7da; color: #721c24; }
+        .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+        .tag { padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; background: #f1f5f9; color: #4a5568; }
+        .btn-back { display: inline-block; background: #e94560; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; margin-top: 1rem; margin-right: 10px; }
+        .btn-back:hover { background: #c82333; }
+        .toast { position: fixed; bottom: 30px; right: 30px; background: #28a745; color: white; padding: 12px 20px; border-radius: 8px; display: none; z-index: 1000; }
+        @media (max-width: 768px) { .place-header h1 { font-size: 1.5rem; } }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="logo"><i class="fas fa-headphones"></i><h1>QuietPlace</h1></div>
+    <div class="nav-links">
+        <a href="/home">Home</a>
+        <a href="/explore">Explore</a>
+        <a href="/favorites">Favorites</a>
+        <a href="/profile">Profile</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="place-card">
+        <div class="place-header">
+            <i class="fas fa-map-marker-alt"></i>
+            <button class="favorite-btn" onclick="toggleFavorite()">
+                <i id="favoriteIcon" class="far fa-heart"></i>
+            </button>
+            <h1 th:text="${place.name}">Place Name</h1>
+            <div class="address" th:text="${place.address}">Address</div>
+        </div>
+        <div class="place-body">
+            <div class="info-section">
+                <h3><i class="fas fa-volume-down"></i> Noise Level</h3>
+                <span class="noise-badge" th:class="${place.noiseLevel <= 30} ? 'noise-quiet' : (${place.noiseLevel <= 70} ? 'noise-moderate' : 'noise-active')"
+                      th:text="${place.noiseLevel <= 30} ? '🔇 Quiet (' + ${place.noiseLevel} + '/100)' : (${place.noiseLevel <= 70} ? '🔊 Moderate (' + ${place.noiseLevel} + '/100)' : '📢 Active (' + ${place.noiseLevel} + '/100)')">
+                </span>
+            </div>
+
+            <div class="info-section" th:if="${place.purpose != null and !place.purpose.empty}">
+                <h3><i class="fas fa-briefcase"></i> Purpose</h3>
+                <div class="tags">
+                    <span class="tag" th:each="p : ${place.purpose}" th:text="${p}">Study</span>
+                </div>
+            </div>
+
+            <div class="info-section" th:if="${place.amenities != null and !place.amenities.empty}">
+                <h3><i class="fas fa-concierge-bell"></i> Amenities</h3>
+                <div class="tags">
+                    <span class="tag" th:each="a : ${place.amenities}" th:text="${a}">WiFi</span>
+                </div>
+            </div>
+
+            <a href="/explore" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Explore</a>
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="toast">
+    <i class="fas fa-check-circle"></i> <span id="toastMessage">Added to favorites!</span>
+</div>
+
+<script>
+    let isFavorite = false;
+    const placeId = [[${place.id}]];
+
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+        toastMessage.textContent = message;
+        toast.style.display = 'block';
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 2000);
+    }
+
+    function toggleFavorite() {
+        const icon = document.getElementById('favoriteIcon');
+
+        if (isFavorite) {
+            fetch('/api/users/favorites/' + placeId, {
+                method: 'DELETE'
+            }).then(response => {
+                if (response.ok) {
+                    isFavorite = false;
+                    icon.className = 'far fa-heart';
+                    icon.style.color = '#ccc';
+                    showToast('Removed from favorites');
+                }
+            });
+        } else {
+            fetch('/api/users/favorites/' + placeId, {
+                method: 'POST'
+            }).then(response => {
+                if (response.ok) {
+                    isFavorite = true;
+                    icon.className = 'fas fa-heart';
+                    icon.style.color = '#e94560';
+                    showToast('Added to favorites');
+                } else if (response.status === 401) {
+                    showToast('Please login to add favorites');
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 1000);
+                }
+            });
+        }
+    }
+
+    // Check if already favorited
+    fetch('/api/users/favorites/' + placeId + '/check')
+        .then(response => response.json())
+        .then(data => {
+            if (data.isFavorite) {
+                isFavorite = true;
+                const icon = document.getElementById('favoriteIcon');
+                icon.className = 'fas fa-heart';
+                icon.style.color = '#e94560';
+            }
+        })
+        .catch(error => console.log('Not logged in'));
+</script>
+</body>
+</html>

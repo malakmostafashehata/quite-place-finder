@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Places - Admin Panel</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; color: #333; }
+        .admin-container { display: flex; min-height: 100vh; }
+        .sidebar { width: 280px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar-header { padding: 25px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-header h2 { font-size: 22px; }
+        .sidebar-header p { font-size: 12px; color: #888; }
+        .nav-menu { list-style: none; padding: 20px 0; }
+        .nav-link { display: flex; align-items: center; padding: 12px 25px; color: #ccc; text-decoration: none; gap: 12px; }
+        .nav-link:hover { background: rgba(255,255,255,0.1); color: white; }
+        .nav-link.active { background: #e94560; color: white; }
+        .nav-icon { font-size: 20px; width: 25px; }
+        .main-content { flex: 1; margin-left: 280px; padding: 20px; }
+        .top-bar { background: white; border-radius: 10px; padding: 15px 25px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
+        .page-title { font-size: 24px; font-weight: 600; }
+        .logout-btn { background: #dc3545; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; text-decoration: none; display: inline-block; }
+        .form-container { background: white; border-radius: 10px; padding: 25px; margin-bottom: 30px; }
+        .form-container h2 { margin-bottom: 20px; font-size: 18px; color: #1a1a2e; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 500; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-warning { background: #ffc107; color: #333; }
+        .table-container { background: white; border-radius: 10px; padding: 20px; overflow-x: auto; }
+        .search-box { width: 300px; padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f8f9fa; font-weight: 600; }
+        tr:hover { background: #f5f5f5; }
+        .noise-low { color: #28a745; font-weight: bold; }
+        .noise-mid { color: #ffc107; font-weight: bold; }
+        .noise-high { color: #dc3545; font-weight: bold; }
+        .alert { padding: 12px 20px; border-radius: 5px; margin-bottom: 20px; }
+        .alert-success { background: #d4edda; color: #155724; }
+        .alert-danger { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+<div class="admin-container">
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>Quiet Place</h2>
+            <p>Admin Panel</p>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item"><a th:href="@{/admin/dashboard}" class="nav-link"><span class="nav-icon">📊</span><span>Dashboard</span></a></li>
+            <li class="nav-item"><a th:href="@{/admin/manage-users}" class="nav-link"><span class="nav-icon">👥</span><span>Manage Users</span></a></li>
+            <li class="nav-item"><a th:href="@{/admin/manage-places}" class="nav-link active"><span class="nav-icon">📍</span><span>Manage Places</span></a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="top-bar">
+            <h1 class="page-title">Manage Places</h1>
+            <div class="admin-info">
+                <span>👋 Welcome, Admin</span>
+                <a href="/logout" class="logout-btn">Logout</a>
+            </div>
+        </div>
+
+        <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <div class="form-container">
+            <h2>➕ Add New Place</h2>
+            <form method="post" th:action="@{/admin/places}">
+                <div class="form-group">
+                    <label>Place Name *</label>
+                    <input type="text" name="name" required placeholder="e.g., Central Library">
+                </div>
+                <div class="form-group">
+                    <label>Address *</label>
+                    <input type="text" name="address" required placeholder="123 Main Street">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Noise Level (0-100) *</label>
+                        <input type="number" name="noiseLevel" min="0" max="100" step="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Latitude *</label>
+                        <input type="number" name="latitude" step="any" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Longitude *</label>
+                        <input type="number" name="longitude" step="any" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Purpose (comma-separated)</label>
+                    <input type="text" name="purpose" placeholder="Study, Work, Reading">
+                </div>
+                <div class="form-group">
+                    <label>Amenities (comma-separated)</label>
+                    <input type="text" name="amenities" placeholder="WiFi, Coffee, Parking">
+                </div>
+                <button type="submit" class="btn btn-success">Add Place</button>
+            </form>
+        </div>
+
+        <div class="table-container">
+            <input type="text" id="searchInput" class="search-box" placeholder="🔍 Search places..." onkeyup="searchTable()">
+            <table id="placesTable">
+                <thead>
+                <tr><th>ID</th><th>Name</th><th>Address</th><th>Noise Level</th><th>Latitude</th><th>Longitude</th><th>Purpose</th><th>Amenities</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                <tr th:each="place : ${places}">
+                    <td th:text="${place.id}">1</td>
+                    <td th:text="${place.name}">Central Library</td>
+                    <td th:text="${place.address}">123 Main St</td>
+                    <td><span th:class="${place.noiseLevel <= 30} ? 'noise-low' : (${place.noiseLevel <= 70} ? 'noise-mid' : 'noise-high')" th:text="${place.noiseLevel}">50</span></td>
+                    <td th:text="${place.latitude}">40.7128</td>
+                    <td th:text="${place.longitude}">-74.0060</td>
+                    <td th:text="${place.purpose != null ? #strings.listJoin(place.purpose, ', ') : '-'}">Study, Work</td>
+                    <td th:text="${place.amenities != null ? #strings.listJoin(place.amenities, ', ') : '-'}">WiFi, Coffee</td>
+                    <td>
+                        <form method="post" th:action="@{'/admin/places/' + ${place.id} + '/delete'}" style="display: inline;">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${places == null or places.isEmpty()}">
+                    <td colspan="9" style="text-align: center;">No places found</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function searchTable() {
+        let input = document.getElementById('searchInput');
+        let filter = input.value.toLowerCase();
+        let table = document.getElementById('placesTable');
+        let rows = table.getElementsByTagName('tr');
+        for (let i = 1; i < rows.length; i++) {
+            let cells = rows[i].getElementsByTagName('td');
+            let found = false;
+            for (let j = 0; j < cells.length - 1; j++) {
+                if (cells[j] && cells[j].innerText.toLowerCase().indexOf(filter) > -1) {
+                    found = true;
+                    break;
+                }
+            }
+            rows[i].style.display = found ? '' : 'none';
+        }
+    }
+</script>
+</body>
+</html>

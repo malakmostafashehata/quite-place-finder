@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - QuietPlace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            color: #333;
+        }
+        .footer {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            margin-top: 3rem;
+            padding-top: 2rem;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0 5%;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-left h3 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #e94560;
+        }
+
+        .footer-left p {
+            color: #ccc;
+            margin-top: 8px;
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .footer-links a:hover {
+            color: #e94560;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            font-size: 1.2rem;
+            color: #ccc;
+        }
+
+        .footer-social i:hover {
+            color: #e94560;
+            cursor: pointer;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 28px;
+            color: #e94560;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #ccc;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #e94560;
+        }
+
+        .hero-small {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .hero-small h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .filter-panel {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .filter-group {
+            margin-bottom: 1rem;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .filter-group label i {
+            color: #e94560;
+            margin-right: 5px;
+        }
+
+        .filter-group input, .filter-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .btn-search {
+            width: 100%;
+            padding: 12px;
+            background: #e94560;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+        .footer {
+            background: linear-gradient(135deg, #0f172a, #1a1a2e);
+            color: white;
+            margin-top: 50px;
+            padding: 40px 20px 10px;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .footer-box h3 {
+            color: #e94560;
+            margin-bottom: 10px;
+        }
+
+        .footer-box h4 {
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .footer-box p,
+        .footer-box a {
+            color: #bbb;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: block;
+            margin: 5px 0;
+        }
+
+        .footer-box a:hover {
+            color: #e94560;
+        }
+
+        .social {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .social i {
+            font-size: 18px;
+            padding: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .social i:hover {
+            background: #e94560;
+            transform: scale(1.1);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+        .btn-search:hover {
+            background: #c82333;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .map-container {
+            background: #e2e8f0;
+            border-radius: 15px;
+            height: 500px;
+        }
+
+        .places-list {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .places-list h3 {
+            margin-bottom: 1rem;
+        }
+
+        .result-count {
+            font-size: 0.8rem;
+            font-weight: normal;
+            color: #666;
+        }
+
+        .place-card {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+
+        .place-card:hover {
+            background: #f8f9fa;
+        }
+
+        .place-card h4 {
+            color: #1a1a2e;
+            margin-bottom: 0.25rem;
+        }
+
+        .address {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .place-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .distance-badge {
+            background: #e0e7ff;
+            color: #4f46e5;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="logo">
+        <i class="fas fa-headphones"></i>
+        <h1>QuietPlace</h1>
+    </div>
+    <div class="nav-links">
+        <a href="/home" class="active">Home</a>
+        <a href="/explore">Explore</a>
+        <a href="/favorites">Favorites</a>
+        <a href="/profile">profile</a>
+    </div>
+    <div class="user-menu">
+        <div class="user-info">
+            <i class="fas fa-user-circle"></i>
+        </div>
+    </div>
+</nav>
+
+<div class="hero-small">
+    <h1>Find Your Perfect Quiet Spot</h1>
+    <p>Discover peaceful places based on your noise preferences</p>
+</div>
+
+<div class="container">
+    <form action="/home/search" method="post" class="filter-panel">
+        <div class="filter-group">
+            <label><i class="fas fa-location-dot"></i> Your Location</label>
+            <input type="text" name="location" placeholder="Enter city or address" required>
+        </div>
+        <div class="filter-group">
+            <label><i class="fas fa-ruler"></i> Search Radius (km)</label>
+            <select name="radius">
+                <option value="1">1 km</option>
+                <option value="5" selected>5 km</option>
+                <option value="10">10 km</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label><i class="fas fa-volume-down"></i> Noise Level</label>
+            <select name="noiseLevel">
+                <option value="any">Any</option>
+                <option value="quiet">Quiet</option>
+                <option value="moderate">Moderate</option>
+            </select>
+        </div>
+        <button type="submit" class="btn-search"><i class="fas fa-search"></i> Find Places</button>
+    </form>
+
+    <div class="main-content">
+        <div class="map-container">
+            <div id="map" style="height: 100%;"></div>
+        </div>
+        <div class="places-list">
+            <h3>Nearby Places <span class="result-count">0 places</span></h3>
+            <div class="empty-state">
+                <i class="fas fa-map-marker-alt"></i>
+                <p>Enter your location and click "Find Places"</p>
+            </div>
+        </div>
+    </div>
+</div><footer class="footer">
+
+    <div class="footer-container">
+
+        <!-- ABOUT -->
+        <div class="footer-box">
+            <h3><i class="fas fa-headphones"></i> QuietPlace</h3>
+            <p>Find your calm space anywhere, anytime. We help you discover peaceful places based on noise level.</p>
+        </div>
+
+        <!-- LINKS -->
+        <div class="footer-box">
+            <h4>Quick Links</h4>
+            <a href="/home">Home</a>
+            <a href="/explore">Explore</a>
+            <a href="/favorites">Favorites</a>
+            <a href="/profile">Profile</a>
+        </div>
+
+        <!-- CONTACT -->
+        <div class="footer-box">
+            <h4>Contact</h4>
+            <p><i class="fas fa-envelope"></i> support@quietplace.com</p>
+            <p><i class="fas fa-phone"></i> +20 100 000 0000</p>
+        </div>
+
+        <!-- SOCIAL -->
+        <div class="footer-box">
+            <h4>Follow Us</h4>
+            <div class="social">
+                <i class="fab fa-facebook"></i>
+                <i class="fab fa-instagram"></i>
+                <i class="fab fa-twitter"></i>
+                <i class="fab fa-linkedin"></i>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        © 2026 QuietPlace | Made with ❤️
+    </div>
+
+</footer>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    let map;
+    let markers = [];
+
+    // Initialize map when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        // Default location (Cairo)
+        const defaultLat = 30.0444;
+        const defaultLng = 31.2357;
+
+        // Create map
+        map = L.map('map').setView([defaultLat, defaultLng], 13);
+
+        // Add map tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Add marker at default location
+        L.marker([defaultLat, defaultLng]).addTo(map)
+            .bindPopup('Your Location');
+    });
+</script>
+</body>
+</html>
